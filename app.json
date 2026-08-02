@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Metraje Instante",
+    "slug": "metraje-instante",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.luchocode.metrajeinstante",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Metraje Instante necesita la cámara para medir distancias y áreas en Realidad Aumentada."
+      }
+    },
+    "android": {
+      "package": "com.luchocode.metrajeinstante",
+      "permissions": [
+        "CAMERA"
+      ]
+    },
+    "plugins": [
+      "@reactvision/react-viro",
+      "expo-dev-client"
+    ]
+  }
+}
