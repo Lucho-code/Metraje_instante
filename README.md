@@ -18,25 +18,30 @@ MVP de una app móvil (iOS/Android) para medir **distancias** y **áreas** en Re
    - Botones para deshacer el último punto, reiniciar, y guardar el resultado en el historial.
 3. **Historial** → lista de mediciones guardadas, con fecha, valor y opción de borrar.
 
-## ⚠️ Importante — léase antes de correr el proyecto
+## ✅ Qué se probó y qué no
 
-Esta app **no se probó en un dispositivo físico** (el entorno donde se generó no tiene cámara ni puede compilar apps nativas iOS/Android). Antes de considerarla terminada:
+Este entorno no tiene cámara ni puede compilar apps nativas iOS/Android, así que **la app en sí nunca se ejecutó en un dispositivo real**. Lo que sí se verificó localmente, contra el paquete real instalado (SDK 57 / React Native 0.86.2 / `@reactvision/react-viro` 2.57.5):
 
-1. **No funciona en Expo Go.** ViroReact requiere módulos nativos, así que hace falta un *development build* propio:
+- `npm install` sin conflictos de dependencias.
+- `tsc --noEmit` (chequeo de tipos) sin errores, incluyendo las props de ViroReact usadas en `MeasureARScene.tsx` (`onClickState`, `onAnchorFound`, tipos de posición 3D) contra los `.d.ts` reales del paquete — no son una suposición, se confirmaron línea por línea.
+- `npx expo config` y `expo-doctor` (18/20 checks; los 2 que fallan son validaciones contra servidores de Expo, inalcanzables desde este entorno — no son del proyecto).
+- `npx expo export --platform android`: Metro bundlea las 947 dependencias sin errores (código, navegación, assets de Viro incluidos).
+
+Lo que **falta probar** y solo se puede hacer en un dispositivo real:
+
+1. **Comportamiento en cámara real:** que el toque sobre el `ViroQuad` invisible efectivamente devuelva la posición 3D esperada, que la detección de plano sea estable, y que distancia/área calculen bien en la práctica.
+2. **No funciona en Expo Go** — ViroReact requiere *New Architecture* y módulos nativos, así que hace falta un *development build* propio:
    ```bash
    npm install
-   npx expo install --fix        # alinea versiones de Expo/RN a las disponibles hoy
+   npx eas login
    npx eas build --profile development --platform ios      # o android
    ```
-   (Necesitás una cuenta de Expo/EAS gratuita: `npx eas login`.)
+3. **Versiones de Expo/RN avanzan rápido.** Si pasó tiempo desde que se generó esto, correr `npx expo install --fix` (requiere acceso a `api.expo.dev`, bloqueado en el entorno donde se armó el proyecto pero disponible en una máquina normal) para re-alinear versiones.
 
-2. **Las versiones en `package.json` son un punto de partida, no verdad absoluta.** Las versiones de Expo/React Native avanzan rápido; corré `npx expo install --fix` apenas clones el repo para que Expo CLI resuelva las versiones compatibles vigentes.
+## Limitaciones conocidas del MVP
 
-3. **La lógica de hit-testing en `src/ar/MeasureARScene.tsx`** usa el patrón estándar de la comunidad ViroReact (un `ViroQuad` invisible apoyado sobre el plano detectado, con `onClickState` para capturar el toque en coordenadas 3D). No pude verificar esta API contra la documentación oficial en vivo (bloqueada para scraping automático) — está basada en mi conocimiento del proyecto y en patrones públicos de apps de "regla AR" con Viro. **Verificalo contra la [documentación oficial](https://viro-community.readme.io/) y el [starter kit oficial de Expo+TS](https://github.com/ReactVision/expo-starter-kit-typescript) antes de dar por bueno el comportamiento**, especialmente si algo no compila o el evento de toque no trae la posición esperada.
-
-4. **Limitación conocida del MVP:** la app se ancla al *primer* plano detectado (ideal para medir un piso, mesa o pared específica). No soporta todavía "tocar en cualquier punto del aire" tipo escaneo LiDAR de la app Measure de Apple — eso requeriría un módulo nativo adicional de ray-casting, buen paso siguiente si esto valida bien.
-
-5. **Sin ícono/splash propio todavía.** Agregá tus propios `assets/icon.png` y `assets/splash.png` y referencialos en `app.json` antes de publicar en las stores.
+- La app se ancla al *primer* plano detectado (ideal para medir un piso, mesa o pared específica). No soporta todavía "tocar en cualquier punto del aire" tipo escaneo LiDAR de la app Measure de Apple — eso requeriría un módulo nativo adicional de ray-casting, buen paso siguiente si esto valida bien.
+- Sin ícono/splash propio todavía. Agregá tus propios `assets/icon.png` y `assets/splash.png` y referencialos en `app.json` antes de publicar en las stores.
 
 ## Estructura
 

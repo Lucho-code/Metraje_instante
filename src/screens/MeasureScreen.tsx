@@ -158,7 +158,7 @@ function ActionButton({
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#000' },
   arView: { flex: 1 },
-  overlay: { ...StyleSheet.absoluteFillObject, justifyContent: 'space-between' },
+  overlay: { ...StyleSheet.absoluteFill, justifyContent: 'space-between' },
   topBar: { flexDirection: 'row', justifyContent: 'center', gap: 8, marginTop: 12 },
   modeButton: { paddingVertical: 8, paddingHorizontal: 20, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.5)' },
   modeButtonActive: { backgroundColor: colors.primary },
